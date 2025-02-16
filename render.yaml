@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: onepay
+    env: docker
+    buildCommand: docker build -t onepay .
+    startCommand: docker run -p $PORT:80 onepay
+    envVars:
+      - key: APP_ENV
+        value: prod
+      - key: APP_SECRET
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET_KEY
+        sync: false
+      - key: JWT_PUBLIC_KEY
+        sync: false
+      - key: JWT_PASSPHRASE
+        sync: false
+      - key: CORS_ALLOW_ORIGIN
+        value: "^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$"
+
+databases:
+  - name: onepay
+    databaseName: onepay
+    plan: starter
