@@ -1,5 +1,45 @@
+# config/routes.yaml
+
+# Configuration des contrôleurs avec attributs
 controllers:
     resource:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+# Routes d'authentification Google
+google_login:
+    path: /connect/google
+    controller: App\Controller\SecurityController::connectGoogle
+
+google_connect_check:
+    path: /connect/google/check
+    controller: App\Controller\SecurityController::connectGoogleCheck
+
+app_logout:
+    path: /logout
+    methods: GET
+
+api_login_check:
+    path: /api/login_check
+    methods: [POST]
+    controller: lexik_jwt_authentication.controller.token
+
+connect_google:
+    path: /connect/google
+
+connect_google_check:
+    path: /connect/google/check
+
+#app_access_denied:
+ #   path: /access-denied
+  #  controller: App\Controller\SecurityController::accessDenied
+
+api_login:
+    path: /api/login
+    methods: ['POST']
+
+api_logout:
+    path: /api/logout
+    methods: ['POST']
+

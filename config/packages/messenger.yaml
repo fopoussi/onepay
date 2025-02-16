@@ -1,0 +1,40 @@
+framework:
+    messenger:
+        failure_transport: failed
+
+        transports:
+            # Transport principal pour les messages
+            async:
+                dsn: 'doctrine://default?queue_name=async'
+                retry_strategy:
+                    max_retries: 3
+                    delay: 60000 # 1 minute
+                    multiplier: 2
+                    max_delay: 300000 # 5 minutes
+            
+            # Transport pour les messages en échec
+            failed:
+                dsn: 'doctrine://default?queue_name=failed'
+                retry_strategy:
+                    max_retries: 3
+                    delay: 60000 # 1 minute
+                    multiplier: 2
+
+        routing:
+            # Route pour le traitement des transactions
+            'App\Message\ProcessTransactionMessage': 
+                senders: ['async']
+            
+            # Route pour l'envoi des notifications
+            'App\Message\SendNotificationMessage':
+                senders: ['async']
+            
+            # Route pour la synchronisation des soldes
+            'App\Message\SyncBalanceMessage':
+                senders: ['async']
+
+        buses:
+            messenger.bus.default:
+                middleware:
+                    - 'App\Middleware\TransactionMiddleware'
+                    - 'App\Middleware\AuditMiddleware'

@@ -1,0 +1,31 @@
+# config/packages/api_platform.yaml
+api_platform:
+    title: 'OnePay API'
+    description: 'API for managing phone credit and money transfers.'
+    version: '1.0.0'
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity']
+    patch_formats:
+        json: ['application/merge-patch+json']
+    
+    defaults: 
+        stateless: true
+        cache_headers:
+            vary: ['Content-Type', 'Authorization', 'Origin']
+    swagger:
+        api_keys:
+            JWT:
+                name: Authorization
+                type: header
+        
+#        versions: [3]
+#     defaults:
+#         stateless: true
+ #        cache_headers:
+  #           vary: ['Content-Type', 'Authorization', 'Origin']
+    collection:
+        pagination:
+            enabled: true # Active la pagination pour toutes les collections
+            items_per_page_parameter_name: 'itemsPerPage' # Nom du paramètre pour spécifier le nombre d'éléments par page
+            page_parameter_name: 'page' # Nom du paramètre pour spécifier le numéro de page
+            partial_parameter_name: 'partial' # Nom du paramètre pour activer la pagination partielle

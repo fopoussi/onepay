@@ -1,0 +1,66 @@
+security:
+    password_hashers:
+        App\Entity\OnepayUser:
+            algorithm: auto
+
+    providers:
+        onepay_users:
+            entity:
+                class: App\Entity\OnepayUser
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        
+        google_login:
+            pattern: ^/connect/google
+            provider: onepay_users
+            custom_authenticators:
+                - App\Security\GoogleAuthenticator
+
+        login:
+            pattern: ^/api/login
+            stateless: true
+            json_login:
+                check_path: api_login_check
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        api:
+            pattern: ^/api
+            stateless: true
+            jwt: ~
+
+        main:
+            access_denied_handler: App\Security\AccessDeniedHandler
+            lazy: true
+            provider: onepay_users
+            custom_authenticators:
+                - App\Security\LoginFormAuthenticator
+            entry_point: App\Security\LoginFormAuthenticator
+            
+
+
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                default_target_path: app_home
+                username_parameter: email
+                password_parameter: password
+            
+            logout:
+                path: app_logout
+                target: app_home
+
+    access_control:
+        - { path: ^/connect/google, roles: PUBLIC_ACCESS }
+        - { path: ^/connect/google/check, roles: PUBLIC_ACCESS }
+        - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/register, roles: PUBLIC_ACCESS }
+        - { path: ^/api/docs, roles: PUBLIC_ACCESS }
+        - { path: ^/api/logout, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

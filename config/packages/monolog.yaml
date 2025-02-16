@@ -1,0 +1,63 @@
+monolog:
+    channels: ['securite', 'transaction', 'erreur']
+    handlers:
+        main:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+            channels: ["!event"]
+            
+        securite:
+            type: stream
+            path: "%kernel.logs_dir%/securite.log"
+            level: info
+            channels: ["securite"]
+            formatter: monolog.formatter.json
+            
+        transaction:
+            type: stream
+            path: "%kernel.logs_dir%/transaction.log"
+            level: info
+            channels: ["transaction"]
+            formatter: monolog.formatter.json
+            
+        erreur:
+            type: stream
+            path: "%kernel.logs_dir%/erreur.log"
+            level: error
+            channels: ["erreur"]
+            formatter: monolog.formatter.json
+
+when@dev:
+    monolog:
+        handlers:
+            main:
+                type: stream
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                level: debug
+                channels: ["!event"]
+
+when@test:
+    monolog:
+        handlers:
+            main:
+                type: stream
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                level: debug
+
+when@prod:
+    monolog:
+        handlers:
+            main:
+                type: fingers_crossed
+                action_level: error
+                handler: nested
+                excluded_http_codes: [404, 405]
+            nested:
+                type: stream
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                level: debug
+            console:
+                type: console
+                process_psr_3_messages: false
+                channels: ["!event", "!doctrine"]

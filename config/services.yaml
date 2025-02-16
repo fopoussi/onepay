@@ -1,18 +1,13 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
-
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    transaction.log_file: '%kernel.project_dir%/var/log/transactions.log'
 
 services:
-    # default configuration for services in *this* file
+    # Configuration par défaut pour les services
     _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        autowire: true      # Injection automatique des dépendances
+        autoconfigure: true # Configuration automatique des services
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
+    # Enregistrement des services dans src/
     App\:
         resource: '../src/'
         exclude:
@@ -20,5 +15,46 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\EventSubscriber\ExceptionSubscriber:
+        arguments:
+            $erreurLogger: '@monolog.logger.erreur'
+            $environment: '%kernel.environment%'
+
+    # Configuration explicite des services
+    lexik_jwt_authentication.security.jwt_token_authenticator:
+        class: Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator
+        arguments:
+            - '@lexik_jwt_authentication.jwt_manager'
+            - '@lexik_jwt_authentication.token_extractor.chain_token_extractor'
+            - '@security.user_checker'
+
+    # Configuration explicite du service TransactionLogger
+    App\Service\TransactionLogger:
+        arguments:
+            $logFile: '%transaction.log_file%'
+
+    # Configuration explicite des services
+    App\Processor\OnepayTransactionProcessor:
+        tags: [api_platform.state_processor]
+
+    App\Controller\OnepayTransactionController:
+        tags: [api_platform.controller]
+
+    # Filtres personnalisés
+    onepay_transaction.status_filter:
+        class: App\Filter\StatusFilter
+        tags: ['api_platform.filter']
+
+    onepay_transaction.amount_filter:
+        class: App\Filter\AmountFilter
+        tags: ['api_platform.filter']
+
+    # Configuration du service JWT Authenticator
+    App\Security\OnepayAuthenticator:
+        arguments:
+            $clientRegistry: '@knpu.oauth2.registry'
+            $router: '@router'
+
+   # App\Security\AccessDeniedHandler:
+    #    arguments:
+     #       $router: '@router'

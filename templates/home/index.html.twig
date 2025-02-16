@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}OnePay - Accueil{% endblock %}
+
+{% block body %}
+    <!-- Hero Section -->
+    <section class="hero-section text-white text-center">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 text-lg-start">
+                    <h1 class="display-4 fw-bold mb-4">Simplifiez vos paiements avec OnePay</h1>
+                    <p class="lead mb-4">La solution de paiement mobile sécurisée pour tous vos transferts d'argent</p>
+                    <a href="{{ path('app_login') }}" class="btn btn-light btn-lg">
+                        Commencer maintenant
+                        <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+                <div class="col-lg-6">
+                    <img src="{{ asset('images/onepay-app.png') }}" alt="OnePay App" class="img-fluid rounded shadow">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Fonctionnalités principales</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card text-center p-4">
+                        <i class="fas fa-exchange-alt feature-icon mb-3"></i>
+                        <h3>Transferts instantanés</h3>
+                        <p>Envoyez de l'argent instantanément à vos proches, où qu'ils soient</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center p-4">
+                        <i class="fas fa-shield-alt feature-icon mb-3"></i>
+                        <h3>Sécurité maximale</h3>
+                        <p>Vos transactions sont protégées par les dernières technologies de sécurité</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center p-4">
+                        <i class="fas fa-mobile-alt feature-icon mb-3"></i>
+                        <h3>Application mobile</h3>
+                        <p>Gérez vos paiements facilement depuis votre smartphone</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security Section -->
+    <section id="security" class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Sécurité renforcée</h2>
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <img src="{{ asset('images/security.png') }}" alt="Sécurité" class="img-fluid rounded shadow">
+                </div>
+                <div class="col-md-6">
+                    <div class="security-features">
+                        <div class="d-flex align-items-center mb-4">
+                            <i class="fas fa-lock text-primary me-3"></i>
+                            <div>
+                                <h4>Authentification forte</h4>
+                                <p>Double authentification et connexion sécurisée avec Google</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-4">
+                            <i class="fas fa-history text-primary me-3"></i>
+                            <div>
+                                <h4>Historique détaillé</h4>
+                                <p>Suivi complet de toutes vos transactions</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-user-shield text-primary me-3"></i>
+                            <div>
+                                <h4>Protection des données</h4>
+                                <p>Vos informations personnelles sont cryptées et sécurisées</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Contactez-nous</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            {{ form_start(contact_form) }}
+                                <div class="mb-3">
+                                    {{ form_row(contact_form.name, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_row(contact_form.email, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_row(contact_form.message, {'attr': {'class': 'form-control', 'rows': 4}}) }}
+                                </div>
+                                <button type="submit" class="btn btn-primary">Envoyer</button>
+                            {{ form_end(contact_form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
